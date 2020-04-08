@@ -55,7 +55,7 @@ void my_app::loop(){
         ecat_epos.start_motor();
 
         // Compute setpoint
-        double setpoint = 100*sin(2*3.1415*elapsed_time_ms/1000.0);
+        double setpoint = 50*sin(2*3.1415*elapsed_time_ms/1000.0);
         ecat_epos.set_target_torque(static_cast<int16_t>(setpoint));
         if (loop_cnt%100 == 0)
         {
@@ -64,11 +64,11 @@ void my_app::loop(){
     }
 
 
-    if (loop_cnt > 10000)
+    if (loop_cnt > 1000000)
     {
         ecat_epos.stop_motor();
 
-        if(loop_cnt > 10500)
+        if(loop_cnt > 1000500)
         {
             printf("\nWARNING: Real time loop rate was exceeded %d times out of a total of %ld\n", get_app_error_counter(), loop_cnt);
             stop();
