@@ -1,5 +1,4 @@
 #include "ros_driver.h"
-
 /* EsmaCAT specific includes */
 #include "esmacat_epos4.h"
 
@@ -30,29 +29,25 @@ void ros_driver::ROS_subscribe_thread(){
 
 void ros_driver::ROS_publish_thread(){
 
-  esmacat_pkg::esmacat_publish data_to_publish;
+  esmacat_pkg::esmacat_publish msg_to_publish;
 
   ros::NodeHandle n;
   ros::Rate loop_rate(100);
   ros::Publisher publisher = n.advertise<esmacat_pkg::esmacat_publish>("EsmaCAT_" + topic_name, 1000);
 
-  int ros_count = 0;
+  ros_count = 0;
 
 
   while (ros::ok()){
 
-//    ros_driver::read data_read_interim = this->get_read_message();
+    ros_driver::ROS_publish_msg data_pub_interim = this->get_pub_msg();
 
-//    data_to_send.encoder_counter                     = data_read_interim.EncoderCounter;
-//    data_to_send.analog_input_from_external_source_0 = data_read_interim.AnalogInputFromExternalSource_0;
-//    data_to_send.analog_input_from_external_source_1 = data_read_interim.AnalogInputFromExternalSource_1;
-//    data_to_send.analog_input_from_ESCON_0           = data_read_interim.AnalogInputFromEscon_0;
-//    data_to_send.analog_input_from_ESCON_1           = data_read_interim.AnalogInputFromEscon_1;
-      data_to_publish.num = static_cast<long int>(sin(2*3.14*ros_count++/100)*1000);
+    msg_to_publish.encoder = data_pub_interim.input_encoder_counter;
+    msg_to_publish.num     = data_pub_interim.ros_count;
 
     //Send data to ROS nodes that are not in the hard real-time loop
-    publisher.publish(data_to_publish);
-
+    publisher.publish(msg_to_publish);
+    ros_count++;
     loop_rate.sleep();
   }
 }
@@ -63,7 +58,49 @@ void ros_driver::ROS_publish_thread(){
 
 void ros_driver::ROS_subscribe_callback(const esmacat_pkg::esmacat_subscribe::ConstPtr& msg)
 {
-    //Use the ros_motordriver class to communicate data from other ROS nodes that will be used in the hard real-time loop
-    ROS_INFO("Subscribe: [%li]", msg->num);
+  //Use the ros_motordriver class to communicate data from other ROS nodes that will be used in the hard real-time loop
+  ROS_INFO("Subscribe: [%li]", msg->num);
+
+  ros_driver::ROS_subscribe_msg data_sub_interim;
+  data_sub_interim.output_enable = msg->enable;
+
+  this->set_sub_msg(&data_sub_interim);
 
 }
+
+
+/***********************/
+/* ROS Mutex Functions */
+/***********************/
+
+void ros_driver::set_pub_msg(esmacat_epos4* ecat_epos){
+
+  interim_encoder_counter    = ros_count;
+
+  //apply boost lock for accessing private variables
+  boost::lock_guard<boost::mutex> lock(mtx_ros_publish);
+
+  pub_msg.input_encoder_counter                  = interim_encoder_counter;
+}
+
+ros_driver::ROS_publish_msg ros_driver::get_pub_msg() const{
+  //apply boost lock for accessing private variables
+  boost::lock_guard<boost::mutex> lock(mtx_ros_publish);
+  return(pub_msg);
+}
+
+
+void ros_driver::set_sub_msg(const ros_driver::ROS_subscribe_msg* msg){
+  //apply boost lock for accessing private variables
+  boost::lock_guard<boost::mutex> lock(mtx_ros_subscribe);
+  sub_msg = *msg;
+}
+
+ros_driver::ROS_subscribe_msg ros_driver::get_sub_msg() const{
+  //apply boost lock for accessing private variables
+  boost::lock_guard<boost::mutex> lock(mtx_ros_subscribe);
+  return(sub_msg);
+}
+
+
+

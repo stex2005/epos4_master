@@ -38,6 +38,8 @@ private:
 
     esmacat_epos4 ecat_epos; /**< create your Esmacat slave object */
     ros_driver    ecat_ros;
+    ros_driver::ROS_subscribe_msg ecat_get_from_nodes;
+    ros_driver::ROS_publish_msg ecat_set_to_master;
 
 public:
     /** A constructor- sets initial values for class members */
