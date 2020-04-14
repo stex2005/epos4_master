@@ -6,6 +6,7 @@
  ****************************************************************************************/
 #include <iostream>
 #include "my_app.h"
+#include "ros/ros.h"
 
 /*****************************************************************************************
  * FUNCTIONS
@@ -17,23 +18,34 @@
  * @return
  */
 
-int main()
-{
-    //this is defined in my_app.cpp and my_app.h
-    my_app app;
+int main(int argc, char **argv){
 
-    // if you already know the ethernet adapter name for EtherCAT, uncomment and use the line below
-    //    app.set_ethercat_adapter_name(" WRITE YOUR ETHERNET ADAPTER NAME");
+  // ROS initialization
+  ros::init(argc, argv, "EsmaCAT_ROS_Driver");
 
-    // If the name is not known, select through the terminal an ethernet adapter (the slave)
-    // you'd like to communicate with over EtherCAT
-    app.set_ethercat_adapter_name_through_terminal();
+  //this is defined in my_app.cpp and my_app.h
+  my_app app;
 
-    // start the esmacat application customized for your slave
-    app.start();
+  // if you already know the ethernet adapter name for EtherCAT, uncomment and use the line below
+  //    app.set_ethercat_adapter_name(" WRITE YOUR ETHERNET ADAPTER NAME");
 
-    //the application runs as long as the esmacat master and slave are in communication
-    while (app.is_esmacat_master_closed() == FALSE );
-    return 0;
+  // If the name is not known, select through the terminal an ethernet adapter (the slave)
+  // you'd like to communicate with over EtherCAT
+  app.set_ethercat_adapter_name_through_terminal();
+
+  // start the esmacat application customized for your slave
+  app.start();
+
+  //the application runs as long as the esmacat master and slave are in communication
+  while (app.is_esmacat_master_closed() == FALSE ){
+    if(!ros::ok()){
+      app.stop();
+    }
+
+  }
+
+  ros::shutdown();//Shutdown ROS after the EsmaCAT application is complete.
+
+  return 0;
 }
 

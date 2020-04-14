@@ -12,6 +12,7 @@
 #include "application.h"
 //Include the header file for the Esmacat slave you plan to use for e.g. Analog Input slave
 #include "esmacat_epos4.h"
+#include "ros_driver.h"
 using namespace std;
 
 
@@ -36,12 +37,11 @@ private:
     void loop(); /** control loop*/
 
     esmacat_epos4 ecat_epos; /**< create your Esmacat slave object */
+    ros_driver    ecat_ros;
+
 public:
     /** A constructor- sets initial values for class members */
-    my_app()
-    {
-
-    }
+    my_app() : ecat_ros("ecat_ros"){}
 };
 
 #endif // MY_APP_H

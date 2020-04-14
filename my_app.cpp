@@ -1,4 +1,4 @@
-/** @file
+ /** @file
  * @brief This file contains the definition of the functions associated with the user-defined
  * application for the Esmacat slave project */
 /*****************************************************************************************
