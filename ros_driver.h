@@ -28,7 +28,6 @@ public:
     boost_ROS_subscribe_thread.join();
   }
 
-  int64_t ros_count;
   /***********************/
   /* ROS Publisher Stuff */
   /***********************/
@@ -36,11 +35,11 @@ public:
   struct ROS_publish_msg
   {
     int32_t input_encoder_counter;
-    int64_t ros_count;
+    int32_t ros_count;
     ROS_publish_msg() : input_encoder_counter(0), ros_count(0) {}
   };
   void ROS_publish_thread();
-  void set_pub_msg(esmacat_epos4* ecat_epos);
+  void set_pub_msg();//esmacat_epos4* ecat_epos);
   ROS_publish_msg get_pub_msg() const;
 
   /************************/
@@ -62,6 +61,7 @@ private:
 
   const std::string topic_name;
   int32_t interim_encoder_counter;
+  int32_t ros_count;
   bool    interim_enable;
 
   ROS_publish_msg   pub_msg;

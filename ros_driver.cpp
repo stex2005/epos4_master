@@ -1,6 +1,7 @@
 #include "ros_driver.h"
 /* EsmaCAT specific includes */
 #include "esmacat_epos4.h"
+#include "my_app.h"
 
 /* ROS specific includes */
 #include "esmacat_pkg/esmacat_publish.h"
@@ -18,7 +19,7 @@ void ros_driver::ROS_subscribe_thread(){
   ros::MultiThreadedSpinner spinner(0);
   ros::NodeHandle n;
 
-  ros::Subscriber subscriber = n.subscribe("EsmaCAT_" + topic_name, 1000, &ros_driver::ROS_subscribe_callback, this);
+  ros::Subscriber subscriber = n.subscribe("EsmaCAT_sub_" + topic_name, 1000, &ros_driver::ROS_subscribe_callback, this);
 
   spinner.spin(); //blocking spin call for this thread
 }
@@ -33,17 +34,18 @@ void ros_driver::ROS_publish_thread(){
 
   ros::NodeHandle n;
   ros::Rate loop_rate(100);
-  ros::Publisher publisher = n.advertise<esmacat_pkg::esmacat_publish>("EsmaCAT_" + topic_name, 1000);
+  ros::Publisher publisher = n.advertise<esmacat_pkg::esmacat_publish>("EsmaCAT_pub_" + topic_name, 1000);
 
-  ros_count = 0;
+  ros_count = 100;
 
 
   while (ros::ok()){
 
     ros_driver::ROS_publish_msg data_pub_interim = this->get_pub_msg();
 
+    ros_driver::set_pub_msg();
     msg_to_publish.encoder = data_pub_interim.input_encoder_counter;
-    msg_to_publish.num     = data_pub_interim.ros_count;
+    msg_to_publish.num     = ros_count;
 
     //Send data to ROS nodes that are not in the hard real-time loop
     publisher.publish(msg_to_publish);
@@ -73,7 +75,7 @@ void ros_driver::ROS_subscribe_callback(const esmacat_pkg::esmacat_subscribe::Co
 /* ROS Mutex Functions */
 /***********************/
 
-void ros_driver::set_pub_msg(esmacat_epos4* ecat_epos){
+void ros_driver::set_pub_msg(){//esmacat_epos4* ecat_epos){
 
   interim_encoder_counter    = ros_count;
 
@@ -81,6 +83,7 @@ void ros_driver::set_pub_msg(esmacat_epos4* ecat_epos){
   boost::lock_guard<boost::mutex> lock(mtx_ros_publish);
 
   pub_msg.input_encoder_counter                  = interim_encoder_counter;
+  pub_msg.ros_count                              = ros_count;
 }
 
 ros_driver::ROS_publish_msg ros_driver::get_pub_msg() const{
