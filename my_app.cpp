@@ -57,10 +57,12 @@ void my_app::loop(){
         // Compute setpoint
         double setpoint = 50*sin(2*3.1415*elapsed_time_ms/1000.0);
         ecat_epos.set_target_torque(static_cast<int16_t>(setpoint));
-        if (loop_cnt%100 == 0)
+        if (loop_cnt%10 == 0)
         {
-            cout << "Setpoint: " << setpoint << " Position: " << ecat_epos.get_position() << " deg" << endl;
+            cout << elapsed_time_ms << "Setpoint: " << setpoint << " Position: " << ecat_epos.get_position() << " deg" << endl;
         }
+
+        ecat_ros.set_sensor_msg(&ecat_epos);
     }
 
 

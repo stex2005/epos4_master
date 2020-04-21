@@ -5,6 +5,8 @@ include_directories(epos4_driver)
 
 add_executable(master ${MY_PROJECT_SOURCES})
 target_link_libraries(master ethercat_driver esmacat ${catkin_LIBRARIES})
+
+
 install(TARGETS master DESTINATION ./bin)
 
 ## Mark cpp header files for installation

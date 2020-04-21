@@ -5,6 +5,9 @@
  * INCLUDES
  ****************************************************************************************/
 #include <iostream>
+#include <chrono>
+#include <thread>
+
 #include "my_app.h"
 #include "ros/ros.h"
 
@@ -41,7 +44,6 @@ int main(int argc, char **argv){
     if(!ros::ok()){
       app.stop();
     }
-
   }
 
   ros::shutdown();//Shutdown ROS after the EsmaCAT application is complete.
