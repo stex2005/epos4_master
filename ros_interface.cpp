@@ -43,8 +43,8 @@ void ros_interface::ROS_publish_thread(){
 
     ros_interface::ROS_sensor_msg data_pub_interim = this->get_sensor_msg();
 
-    msg_to_publish.encoder = data_pub_interim.input_encoder_counter;
-    msg_to_publish.timestamp = data_pub_interim.interim_roscount;
+    msg_to_publish.encoder = data_pub_interim.interim_encoder_counter;
+    msg_to_publish.timestamp = data_pub_interim.interim_timestamp;
 
     //Send data to ROS nodes that are not in the hard real-time loop
     publisher.publish(msg_to_publish);
@@ -77,14 +77,14 @@ void ros_interface::ROS_subscribe_callback(const esmacat_pkg::esmacat_command::C
 void ros_interface::set_sensor_msg(esmacat_epos4* ecat_epos)
   {
 
-  interim_encoder_counter    = ecat_epos->get_position();
-  interim_roscount          = ecat_epos->get_motor_filt_torque();
+  interim_encoder_counter    = (int32_t) ecat_epos->get_position();
+  interim_timestamp      = ecat_epos->get_elapsed_time();
 
   //apply boost lock for accessing private variables
   boost::lock_guard<boost::mutex> lock(mtx_ros_sensor);
 
-  pub_msg.input_encoder_counter                  = interim_encoder_counter;
-  pub_msg.interim_roscount                              = interim_roscount;
+  pub_msg.interim_encoder_counter                  = interim_encoder_counter;
+  pub_msg.interim_timestamp                        = interim_timestamp;
 }
 
 ros_interface::ROS_sensor_msg ros_interface::get_sensor_msg() const{

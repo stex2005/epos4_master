@@ -36,9 +36,10 @@ public:
 
   struct ROS_sensor_msg
   {
-    int32_t input_encoder_counter;
+    int32_t interim_encoder_counter;
     int32_t interim_roscount;
-    ROS_sensor_msg() : input_encoder_counter(0), interim_roscount(0) {}
+    double interim_timestamp;
+    ROS_sensor_msg() : interim_encoder_counter(0), interim_roscount(0), interim_timestamp(0) {}
   };
   void ROS_publish_thread();
   void set_sensor_msg(esmacat_epos4* ecat_epos);
@@ -62,9 +63,11 @@ public:
 private:
 
   const std::string topic_name;
+
   int32_t interim_encoder_counter;
-  int32_t interim_timestamp;
+  double interim_timestamp;
   int32_t interim_roscount;
+
   bool    interim_enable;
 
   ROS_sensor_msg   pub_msg;

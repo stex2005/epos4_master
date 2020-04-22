@@ -74,6 +74,7 @@ void my_app::loop(){
 //          cout << elapsed_time_ms << "Setpoint: " << setpoint << " Position: " << ecat_epos.get_encoder_filt_speed() << " deg" << endl;
   }
 
+  ecat_epos.set_elapsed_time(elapsed_time_ms);
   ecat_ros.set_sensor_msg(&ecat_epos);
 
   if (loop_cnt > 1000000)
