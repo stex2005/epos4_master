@@ -60,7 +60,7 @@ void ros_interface::ROS_publish_thread(){
 void ros_interface::ROS_subscribe_callback(const esmacat_pkg::esmacat_command::ConstPtr& msg)
 {
   //Use the ros_motordriver class to communicate data from other ROS nodes that will be used in the hard real-time loop
-  ROS_INFO("Subscribe State: [%li]", msg->state);
+  ROS_INFO("Subscribe State: [%d]", msg->enable);
 
   ros_interface::ROS_command_msg data_sub_interim;
   data_sub_interim.output_enable = msg->enable;
@@ -78,7 +78,7 @@ void ros_interface::set_sensor_msg(esmacat_epos4* ecat_epos)
   {
 
   interim_encoder_counter    = ecat_epos->get_position();
-  interim_roscount          = interim_roscount;
+  interim_roscount          = ecat_epos->get_motor_filt_torque();
 
   //apply boost lock for accessing private variables
   boost::lock_guard<boost::mutex> lock(mtx_ros_sensor);

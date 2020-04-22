@@ -1,4 +1,0 @@
-[submodule "epos4_driver"]
-	path = epos4_driver
-	url = https://github.com/stex2005/epos4_driver
-	branch = epos4_CST
