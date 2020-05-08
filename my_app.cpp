@@ -34,7 +34,7 @@ void my_app::init()
 {
     // Reset previous Errorcode
     ecat_epos.reset_fault();
-
+    ecat_epos.set_current_limit(500);
     // Set Operation in Cyclic Synchronous Torque Mode
     ecat_epos.set_mode_operation(10);
 
@@ -55,11 +55,11 @@ void my_app::loop(){
         ecat_epos.start_motor();
 
         // Compute setpoint
-        double setpoint = 50*sin(2*3.1415*elapsed_time_ms/1000.0);
+        double setpoint = 100*sin(2*3.1415*elapsed_time_ms/1000.0);
         ecat_epos.set_target_torque(static_cast<int16_t>(setpoint));
-        if (loop_cnt%100 == 0)
+        if (loop_cnt%1000 == 0)
         {
-            cout << "Setpoint: " << setpoint << " Position: " << ecat_epos.get_position() << " deg" << endl;
+            PLOGI.printf("Setpoint: %f Position: %f", setpoint, ecat_epos.get_position());
         }
     }
 
@@ -70,7 +70,7 @@ void my_app::loop(){
 
         if(loop_cnt > 1000500)
         {
-            printf("\nWARNING: Real time loop rate was exceeded %d times out of a total of %ld\n", get_app_error_counter(), loop_cnt);
+            printf("\nWARNING: Real time loop rate was exceeded %ld times out of a total of %ld\n", get_app_loop_cnt(), loop_cnt);
             stop();
         }
     }

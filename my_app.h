@@ -11,7 +11,7 @@
 #include <iostream>
 #include "application.h"
 //Include the header file for the Esmacat slave you plan to use for e.g. Analog Input slave
-#include "esmacat_epos4.h"
+#include "esmacat_epos4_mod.h"
 using namespace std;
 
 
