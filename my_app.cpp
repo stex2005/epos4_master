@@ -38,6 +38,9 @@ void my_app::init()
     // Set Operation in Cyclic Synchronous Torque Mode
     ecat_epos.set_mode_operation(10);
 
+    ecat_sm.init();
+    ecat_sm.data->state = STOP;
+
 }
 
 /**
@@ -46,7 +49,7 @@ void my_app::init()
 void my_app::loop(){
     // add functions below that are to be executed at the loop rate
 
-    if (loop_cnt < 500)
+    if (loop_cnt < 500 || ecat_sm.data->state == STOP)
     {
         ecat_epos.stop_motor();
    }
@@ -67,6 +70,7 @@ void my_app::loop(){
     if (loop_cnt > 1000000)
     {
         ecat_epos.stop_motor();
+        ecat_sm.data->state = STOP;
 
         if(loop_cnt > 1000500)
         {

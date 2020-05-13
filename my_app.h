@@ -12,6 +12,7 @@
 #include "application.h"
 //Include the header file for the Esmacat slave you plan to use for e.g. Analog Input slave
 #include "esmacat_epos4_mod.h"
+#include "esmacat_shared_memory_comm.h"
 using namespace std;
 
 
@@ -36,6 +37,7 @@ private:
     void loop(); /** control loop*/
 
     esmacat_epos4 ecat_epos; /**< create your Esmacat slave object */
+    esmacat_shared_memory_comm ecat_sm;
 public:
     /** A constructor- sets initial values for class members */
     my_app()
