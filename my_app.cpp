@@ -55,7 +55,7 @@ void my_app::loop(){
         ecat_epos.start_motor();
 
         // Compute setpoint
-        double setpoint = 100*sin(2*3.1415*elapsed_time_ms/1000.0);
+        double setpoint = 50*sin(2*3.1415*elapsed_time_ms/1000.0);
         ecat_epos.set_target_torque(static_cast<int16_t>(setpoint));
         if (loop_cnt%1000 == 0)
         {

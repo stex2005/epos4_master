@@ -43,6 +43,7 @@ int main()
 
     //the application runs as long as the esmacat master and slave are in communication
     while (app.is_esmacat_app_closed() == false );
+    app.close();
     return 0;
 }
 
