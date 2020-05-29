@@ -4,7 +4,7 @@
 
 esmacat_shared_memory_comm::esmacat_shared_memory_comm()
 {
-    key = ftok("shmfile",DEFAULT_KEY_ID);
+    key = ftok("shmfile",DEFAULT_ROS_KEY_ID);
 }
 
 esmacat_shared_memory_comm::~esmacat_shared_memory_comm(){

@@ -1,36 +1,24 @@
-
 #ifndef ESMACAT_SHARED_MEMORY_COMM_H
 #define ESMACAT_SHARED_MEMORY_COMM_H
-#define DEFAULT_KEY_ID  1300        // street number of Harmonic Bionics
+#define DEFAULT_ROS_KEY_ID  2108        // street number of Harmonic Bionics
 
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
 #include <iostream>
 
-enum RobotState
-{
-    EXIT,
-    STOP,
-    NULLTORQUE,
-    GRAVITY,
-    FREEZE,
-    QUIT,
-};
 
-/******************************
- *    SHARED MEMORY PACKET    *
- ******************************/
-
-struct shared_memory_packet {
-    double elapsed_time = 0;
-    uint64_t loop_cnt = 0;
-    RobotState state;
-    bool swap_state;
-};
 
 class esmacat_shared_memory_comm
 {
+    struct shared_memory_packet {
+        float analog_input[16];
+        bool stop = false;
+        double elapsed_time = 0;
+        uint64_t loop_cnt = 0;
+        uint64_t state = 1;
+    };
+
 private:
     key_t key;
     bool is_the_shared_memory_detached= 0;
@@ -46,3 +34,4 @@ public:
 };
 
 #endif // ESMACAT_SHARED_MEMORY_COMM_H
+

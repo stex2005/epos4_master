@@ -37,7 +37,7 @@ private:
     void loop(); /** control loop*/
 
     esmacat_epos4 ecat_epos; /**< create your Esmacat slave object */
-    esmacat_shared_memory_comm ecat_sm;
+    esmacat_shared_memory_comm esmacat_sm;
 public:
     /** A constructor- sets initial values for class members */
     my_app()

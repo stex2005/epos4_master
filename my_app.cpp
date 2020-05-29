@@ -38,8 +38,9 @@ void my_app::init()
     // Set Operation in Cyclic Synchronous Torque Mode
     ecat_epos.set_mode_operation(10);
 
-    ecat_sm.init();
-    ecat_sm.data->state = STOP;
+    esmacat_sm.init();
+    esmacat_sm.data->stop = false;
+    esmacat_sm.data->state = 1;
 
 }
 
@@ -49,7 +50,7 @@ void my_app::init()
 void my_app::loop(){
     // add functions below that are to be executed at the loop rate
 
-    if (loop_cnt < 500 || ecat_sm.data->state == STOP)
+    if (loop_cnt < 500)
     {
         ecat_epos.stop_motor();
    }
@@ -60,22 +61,26 @@ void my_app::loop(){
         // Compute setpoint
         double setpoint = 50*sin(2*3.1415*elapsed_time_ms/1000.0);
         ecat_epos.set_target_torque(static_cast<int16_t>(setpoint));
-        if (loop_cnt%1000 == 0)
+        if (loop_cnt%100 == 0)
         {
+            std::cout << esmacat_sm.data->loop_cnt << "\t" << esmacat_sm.data->state << endl;
             PLOGI.printf("Setpoint: %f Position: %f", setpoint, ecat_epos.get_position());
         }
+
+        esmacat_sm.data->loop_cnt = loop_cnt;
+
     }
 
 
-    if (loop_cnt > 1000000)
+    if (loop_cnt > 30000 || esmacat_sm.data->state == 1)
     {
         ecat_epos.stop_motor();
-        ecat_sm.data->state = STOP;
-
-        if(loop_cnt > 1000500)
-        {
-            printf("\nWARNING: Real time loop rate was exceeded %ld times out of a total of %ld\n", get_app_loop_cnt(), loop_cnt);
-            stop();
-        }
+    }
+    if(loop_cnt > 30500 || esmacat_sm.data->state == 0)
+    {
+        esmacat_sm.data->stop = true;
+        printf("\nWARNING: Real time loop rate was exceeded %ld times out of a total of %ld\n", get_app_loop_cnt(), loop_cnt);
+        esmacat_sm.~esmacat_shared_memory_comm();
+        stop();
     }
 }
