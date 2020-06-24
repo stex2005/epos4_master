@@ -47,6 +47,8 @@ void my_app::init()
 void my_app::loop(){
   // add functions below that are to be executed at the loop rate
   double setpoint;
+
+  // Receive commands from ROS Interface
   ecat_command = ecat_ros.get_command_msg();
 
   if (loop_cnt < 500)

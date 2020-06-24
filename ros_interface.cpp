@@ -1,17 +1,18 @@
 #include "ros_interface.h"
-/* EsmaCAT specific includes */
+
+/** EsmaCAT specific includes **/
 #include "esmacat_epos4.h"
 #include "my_app.h"
 
-/* ROS specific includes */
+/** ROS specific includes **/
 #include "esmacat_pkg/esmacat_sensor.h"
 #include "esmacat_pkg/esmacat_command.h"
 #include <boost/thread.hpp>
 #include "ros/ros.h"
 
-/************************/
+/*************************/
 /* ROS Subscriber Thread */
-/************************/
+/*************************/
 
 void ros_interface::ROS_subscribe_thread(){
 

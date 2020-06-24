@@ -10,6 +10,7 @@
  ****************************************************************************************/
 #include <iostream>
 #include "application.h"
+
 //Include the header file for the Esmacat slave you plan to use for e.g. Analog Input slave
 #include "esmacat_epos4.h"
 #include "ros_interface.h"
@@ -36,9 +37,9 @@ private:
     void init(); /** code to be executed in the first iteration of the loop */
     void loop(); /** control loop*/
 
-    esmacat_epos4 ecat_epos; /**< create your Esmacat slave object */
-    ros_interface    ecat_ros;
-    ros_interface::ROS_command_msg ecat_command;
+    esmacat_epos4                   ecat_epos; /**< create your Esmacat slave object */
+    ros_interface                   ecat_ros;
+    ros_interface::ROS_command_msg  ecat_command;
     ros_interface::ROS_sensor_msg   ecat_sensor;
 
 public:
