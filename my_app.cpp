@@ -64,7 +64,7 @@ void my_app::loop(){
         if (loop_cnt%100 == 0)
         {
             std::cout << esmacat_sm.data->loop_cnt << "\t" << esmacat_sm.data->state << endl;
-            PLOGI.printf("Setpoint: %f Position: %f", setpoint, ecat_epos.get_position());
+            printf("Setpoint: %f Position: %f", setpoint, ecat_epos.get_position());
         }
 
         esmacat_sm.data->loop_cnt = loop_cnt;
@@ -72,11 +72,11 @@ void my_app::loop(){
     }
 
 
-    if (loop_cnt > 30000 || esmacat_sm.data->state == 1)
+    if (loop_cnt > 3000)
     {
         ecat_epos.stop_motor();
     }
-    if(loop_cnt > 30500 || esmacat_sm.data->state == 0)
+    if(loop_cnt > 3500 || esmacat_sm.data->state == 0)
     {
         esmacat_sm.data->stop = true;
         printf("\nWARNING: Real time loop rate was exceeded %ld times out of a total of %ld\n", get_app_loop_cnt(), loop_cnt);
